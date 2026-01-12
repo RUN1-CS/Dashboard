@@ -1,0 +1,89 @@
+body {
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(201, 166, 116);
+  font-family: Arial, sans-serif;
+}
+
+.tablet {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  background-color: whitesmoke;
+  border: solid;
+  border-radius: 1em;
+  overflow: hidden;
+}
+
+.nomouse {
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.tablet > .header {
+  height: 20%;
+  min-width: 300px;
+  background-color: darkgray;
+  padding: 0.5em;
+}
+
+.tablet > .body {
+  height: 60%;
+  min-width: 300px;
+  min-height: 200px;
+  padding: 0.5em;
+}
+
+.tablet > .footer {
+  height: 20%;
+  min-width: 300px;
+  background-color: darkgray;
+  padding: 0.5em;
+}
+
+.tablet > h1 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+#action-menu {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  background-color: black;
+  color: white;
+  padding: 0.2em;
+}
+#action-menu > hr {
+  margin: 0.2em 0;
+  color: white;
+}
+#mpop {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+}
+#mpop-edit {
+  display: none;
+}
+#mpop-dash-settings {
+  display: none;
+}
+#mpop-connect {
+  display: none;
+}
+
+svg {
+  z-index: 500;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
