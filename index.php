@@ -39,6 +39,8 @@ try{
         <span id="remove-connections">Remove Connections</span>
         <hr>
         <span id="save-board">Save Board</span>
+        <br>
+        <span id="logout">Log out</span>
     </div>
 
     <svg id="lines-svg">

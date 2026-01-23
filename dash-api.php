@@ -3,7 +3,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $action = $data['action'] ?? '';
 require 'dash-config.php';
 global $pdo;
-require 'validation.php';
+require_once 'validation.php';
 validate();
 $user_id = fetch_user_id($pdo);
 switch($action){
@@ -28,6 +28,10 @@ switch($action){
             $result = '{"tablets":[],"lines":[]}';
         }
         echo $result;
+        break;
+    case 'logout':
+        logout($pdo);
+        echo "Logged out";
         break;
 }
 ?>

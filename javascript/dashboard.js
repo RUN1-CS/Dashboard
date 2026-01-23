@@ -100,6 +100,24 @@ const removeConns = document.getElementById("remove-connections");
 const submitBtn = document.getElementById("ch-sub");
 const connectBtn = document.getElementById("connect-sub");
 const saveBoard = document.getElementById("save-board");
+const logout = document.getElementById("logout");
+
+logout.addEventListener("click", () => {
+  fetch("dash-api.php", {
+    method: "POST",
+    body: JSON.stringify({ action: "logout" }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.text())
+    .then((text) => {
+      window.location.href = "index.php";
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+});
 
 saveBoard.addEventListener("click", () => {
   save();
@@ -133,6 +151,14 @@ add.addEventListener("click", () => {
 del.addEventListener("click", () => {
   if (clicked && clicked.classList.contains("tablet")) {
     document.body.removeChild(clicked);
+    tablets = tablets.filter((t) => t.id != clicked.id);
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const line = lines[i];
+      if (line.Tab1.id == clicked.id || line.Tab2.id == clicked.id) {
+        document.getElementById("lines-svg").removeChild(line.el);
+        lines.splice(i, 1);
+      }
+    }
   }
   am.style.display = "none";
 });
