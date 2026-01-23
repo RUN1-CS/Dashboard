@@ -1,3 +1,13 @@
+<?php
+try{
+    if (!function_exists('validate')) {
+        require_once 'validation.php';
+    }
+    validate();
+}catch(Exception $e){
+    die($e->getMessage());
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,12 +29,16 @@
 
     <div id="action-menu">
         <span id="add-tablet">Add Tablet</span>
+        <br>
         <span id="edit-tablet">Edit Tablet</span>
+        <br>
         <span id="delete-tablet">Delete Tablet</span>
         <hr>
         <span id="add-connections">Add Connection</span>
         <br>
         <span id="remove-connections">Remove Connections</span>
+        <hr>
+        <span id="save-board">Save Board</span>
     </div>
 
     <svg id="lines-svg">
@@ -64,6 +78,6 @@
             </div>
         </div>
     </main>
-    <script src="./dashboard.js"></script>
+    <script src="/javascript/dashboard.js"></script>
 </body>
 </html>

@@ -14,6 +14,7 @@ Right-click on the dashboard to:
 - Delete a tablet
 - Add a connection
 - Remove connections
+- Save board
 
 _Everything happens visually — just right-click and manage your workflow!_
 
@@ -22,7 +23,7 @@ _Everything happens visually — just right-click and manage your workflow!_
 ## Update Roadmap
 
 1. Core mechanics (Done)
-2. Backend (WIP)
+2. Backend (Semi-Done)
 3. GUI settings
 4. Additional features (future)
 

@@ -99,6 +99,12 @@ const addConn = document.getElementById("add-connections");
 const removeConns = document.getElementById("remove-connections");
 const submitBtn = document.getElementById("ch-sub");
 const connectBtn = document.getElementById("connect-sub");
+const saveBoard = document.getElementById("save-board");
+
+saveBoard.addEventListener("click", () => {
+  save();
+  am.style.display = "none";
+});
 
 document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
@@ -106,6 +112,7 @@ document.addEventListener("contextmenu", (e) => {
   am.style.display = "block";
   am.style.top = mouse.y - 5 + "px";
   am.style.left = mouse.x - 5 + "px";
+  moving = false;
 });
 
 am.addEventListener("mouseleave", () => {
@@ -175,7 +182,6 @@ submitBtn.addEventListener("click", (e) => {
     for (let t of tablets) {
       if (t.id == clicked.id) {
         t.update(idInput, titleInput, contentInput, notesInput);
-        lighten(colorInput, 0.4);
         t.el.style.backgroundColor = lighten(colorInput, 0.4);
         t.el.querySelector(".header").style.backgroundColor = colorInput;
         t.el.querySelector(".footer").style.backgroundColor = colorInput;
@@ -204,18 +210,105 @@ connectBtn.addEventListener("click", (e) => {
   }
 });
 
+function save() {
+  const JSONdata = {
+    tablets: tablets.map((t) => ({
+      id: t.id,
+      name: t.el.querySelector(".header h1").innerText,
+      content: t.el.querySelector(".body").innerText,
+      notes: t.el.querySelector(".footer").innerText,
+      position: { x: parseInt(t.el.style.left), y: parseInt(t.el.style.top) },
+      color: t.el.querySelector(".header").style.backgroundColor,
+    })),
+    lines: lines.map((l) => ({
+      tab1Id: l.Tab1.id,
+      tab2Id: l.Tab2.id,
+    })),
+  };
+  fetch("dash-api.php", {
+    method: "POST",
+    body: JSON.stringify({ action: "save", data: JSONdata }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.text())
+    .then((text) => {
+      if (text) console.log("Success:", JSON.parse(text));
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function saveLoop() {
+  console.log("Auto-saved dashboard data.");
+  setTimeout(saveLoop, 600000);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("dash-api.php", {
+    method: "POST",
+    body: JSON.stringify({ action: "load" }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data) return;
+      tablets = [];
+      tablets = data.tablets.map((tData) => {
+        const color = tData.color || "#3498db";
+        const newTablet = tablet.cloneNode(true);
+        newTablet.id = tData.id;
+        newTablet.style.display = "block";
+        document.body.appendChild(newTablet);
+        const t = new Tablet(tData.id);
+        t.update(tData.id, tData.name, tData.content, tData.notes);
+        t.el.style.position = "absolute";
+        t.el.style.left = tData.position.x + "px";
+        t.el.style.top = tData.position.y + "px";
+        t.el.style.backgroundColor = lighten(color, 0.4);
+        t.el.querySelector(".header").style.backgroundColor = color;
+        t.el.querySelector(".footer").style.backgroundColor = color;
+        return t;
+      });
+      lines = data.lines.map((lData) => {
+        const tab1 = tablets.find((t) => t.id == lData.tab1Id);
+        const tab2 = tablets.find((t) => t.id == lData.tab2Id);
+        if (tab1 && tab2) {
+          return new Line(tab1, tab2);
+        }
+      });
+      saveLoop();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+});
+
 function lighten(hex, amt = 0.4) {
-  if (!hex) return hex;
-  hex = hex.replace("#", "");
-  if (hex.length === 3)
-    hex = hex
-      .split("")
-      .map((c) => c + c)
-      .join("");
-  const num = parseInt(hex, 16);
-  let r = (num >> 16) & 0xff;
-  let g = (num >> 8) & 0xff;
-  let b = num & 0xff;
+  let r, g, b;
+  if (hex.startsWith("rgb")) {
+    const rgb = hex.match(/\d+/g).map(Number);
+    r = rgb[0];
+    g = rgb[1];
+    b = rgb[2];
+  } else {
+    if (hex.startsWith("#")) {
+      hex = hex.slice(1);
+    }
+    if (hex.length === 3)
+      hex = hex
+        .split("")
+        .map((c) => c + c)
+        .join("");
+    const num = parseInt(hex, 16);
+    r = (num >> 16) & 0xff;
+    g = (num >> 8) & 0xff;
+    b = num & 0xff;
+  }
   r = Math.round(r + (255 - r) * amt);
   g = Math.round(g + (255 - g) * amt);
   b = Math.round(b + (255 - b) * amt);
