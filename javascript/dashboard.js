@@ -2,6 +2,7 @@ let mouse = { x: 0, y: 0 };
 let moving = false;
 let tablets = [];
 let lines = [];
+let todos = [];
 
 const TheLine = document.getElementById("TheLine");
 
@@ -11,9 +12,12 @@ class Tablet {
     this.el = document.getElementById(this.id);
 
     if (this.el) {
-      this.el.addEventListener("mousedown", () => {
+      this.el.addEventListener("mousedown", (e) => {
+        const rect = this.el.getBoundingClientRect();
+        const grabbedAtX = e.clientX - rect.left;
+        const grabbedAtY = e.clientY - rect.top;
         moving = true;
-        moveTablet(this.el);
+        moveTablet(this.el, grabbedAtX, grabbedAtY);
       });
       this.el.addEventListener("mouseup", () => {
         moving = false;
@@ -30,6 +34,18 @@ class Tablet {
     if (body) body.innerText = content;
     const footer = this.el.querySelector(".footer");
     if (footer) footer.innerText = notes;
+  }
+}
+
+class Todo {
+  constructor(id) {
+    this.id = String(id);
+    this.el = document.getElementById("todo-" + this.id);
+    this.done = false;
+    this.text =
+      this.el && this.el.querySelector(".tasktext")
+        ? this.el.querySelector(".tasktext").value
+        : "";
   }
 }
 
@@ -65,15 +81,15 @@ class Line {
 const tablet = document.getElementById("1");
 tablet.style.display = "none";
 
-function moveTablet(movedTablet) {
+function moveTablet(movedTablet, grabbedAtX = 150, grabbedAtY = 50) {
   let rafId;
   function loop() {
     if (!moving) {
       if (rafId) cancelAnimationFrame(rafId);
       return;
     }
-    movedTablet.style.left = mouse.x - 150 + "px";
-    movedTablet.style.top = mouse.y - 50 + "px";
+    movedTablet.style.left = mouse.x - grabbedAtX + "px";
+    movedTablet.style.top = mouse.y - grabbedAtY + "px";
     for (let line of lines) {
       line.update();
     }
@@ -165,6 +181,7 @@ del.addEventListener("click", () => {
 ch.addEventListener("click", () => {
   am.style.display = "none";
   const mpop = document.getElementById("mpop");
+  document.getElementById("mpop-title").innerText = "Edit Tablet";
   mpop.style.display = "block";
   mpop.style.top = mouse.y - 5 + "px";
   mpop.style.left = mouse.x - 5 + "px";
@@ -182,6 +199,7 @@ ch.addEventListener("click", () => {
 addConn.addEventListener("click", () => {
   am.style.display = "none";
   const mpop = document.getElementById("mpop");
+  document.getElementById("mpop-title").innerText = "Connect Tablet";
   document.getElementById("mpop-connect").style.display = "block";
   mpop.style.display = "block";
   mpop.style.top = mouse.y - 5 + "px";
@@ -250,6 +268,14 @@ function save() {
       tab1Id: l.Tab1.id,
       tab2Id: l.Tab2.id,
     })),
+    todos: todos.map((td) => ({
+      id: td.id,
+      text:
+        td.el && td.el.querySelector(".tasktext")
+          ? td.el.querySelector(".tasktext").innerText
+          : "",
+      done: td.done,
+    })),
   };
   fetch("dash-api.php", {
     method: "POST",
@@ -307,6 +333,36 @@ document.addEventListener("DOMContentLoaded", () => {
           return new Line(tab1, tab2);
         }
       });
+      todos = data.todos.map((tdData) => {
+        const newId = tdData.id;
+        const newTask = document.createElement("div");
+        newTask.className = "task";
+        newTask.id = "todo-" + newId;
+        newTask.innerHTML = `
+          <input type="checkbox" id="checkbox-${newId}" ${
+            tdData.done ? "checked" : ""
+          }>
+          <span class="tasktext"">${tdData.text}</span>
+          <span class="delete-task" style="cursor:pointer;">&times;</span>`;
+        const deleteBtn = newTask.querySelector(".delete-task");
+        deleteBtn.addEventListener("click", () => {
+          todoList.removeChild(newTask);
+          todos = todos.filter((t) => t.id != String(newId));
+        });
+        todoList.appendChild(newTask);
+        const t = new Todo(newId);
+        const checkbox = newTask.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) {
+            t.done = true;
+            newTask.classList.add("done");
+          } else {
+            t.done = false;
+            newTask.classList.remove("done");
+          }
+        });
+        return t;
+      });
       saveLoop();
     })
     .catch((error) => {
@@ -340,3 +396,61 @@ function lighten(hex, amt = 0.4) {
   b = Math.round(b + (255 - b) * amt);
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
+
+const tasks = document.querySelectorAll(".task");
+tasks.forEach((task) => {
+  const checkbox = task.querySelector('input[type="checkbox"]');
+  if (checkbox) {
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        task.done = true;
+        task.classList.add("done");
+      } else {
+        task.done = false;
+        task.classList.remove("done");
+      }
+    });
+  }
+});
+
+const todoList = document.getElementById("to-do-list");
+const existingTasks = todoList.querySelectorAll(".task");
+existingTasks.forEach((task) => {
+  const id = task.id.replace("todo-", "");
+  const t = new Todo(id);
+  todos.push(t);
+});
+const addTask = document.getElementById("add-task");
+addTask.addEventListener("click", () => {
+  const taskTextInput = document.getElementById("newTaskText");
+  const taskText = taskTextInput.value.trim();
+  if (taskText === "") return;
+  taskTextInput.value = "";
+  const newId = Date.now();
+  const newTask = document.createElement("div");
+  newTask.className = "task";
+  newTask.id = "todo-" + newId;
+  newTask.innerHTML = `
+    <input type="checkbox" id="checkbox-${newId}">
+    <span class="tasktext">${taskText}</span>
+    <span class="delete-task" style="cursor:pointer;">&times;</span>
+  `;
+  const deleteBtn = newTask.querySelector(".delete-task");
+  deleteBtn.addEventListener("click", () => {
+    todoList.removeChild(newTask);
+    todos = todos.filter((t) => t.id != String(newId));
+  });
+  todoList.appendChild(newTask);
+  const t = new Todo(newId);
+  todos.push(t);
+  const checkbox = newTask.querySelector('input[type="checkbox"]');
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      t.done = true;
+      newTask.classList.add("done");
+    } else {
+      t.done = false;
+      newTask.classList.remove("done");
+    }
+  });
+});

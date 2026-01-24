@@ -23,16 +23,26 @@
         }
     }
     function validate(){
-        $user_id = null;
         if( !isset($_COOKIE['session_token']) ){
             header('Location: login.php');
             die("No session token");
         }else{
             global $pdo;
+            //verify session token
             $session_token = $_COOKIE['session_token'];
+            $computed_cookie = hash_hmac('sha256', $session_token, SESSION_SECRET);
             $stmt = $pdo->prepare("SELECT user_id FROM sessions WHERE hash = :token");
-            $stmt->execute([':token' => $session_token]);
+            $stmt->execute([':token' => $computed_cookie]);
+
+
+            //fetching user id
             $user_id = $stmt->fetchColumn();
+            if( !$user_id ){
+                header('Location: login.php');
+                die("Invalid session token");
+            }
+
+            //verify session expiry
             $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
             $dbTime = new DateTimeImmutable($stmt->fetchColumn(), new DateTimeZone('UTC'));
             $invalid = ($now->getTimestamp() - $dbTime->getTimestamp()) >= 12 * 60 * 60;
@@ -41,10 +51,6 @@
                 $stmt->execute([':token' => $session_token]);
                 header('Location: login.php');
                 die("Session expired");
-            }
-            if( !$user_id ){
-                header('Location: login.php');
-                die("Invalid session token");
             }
         }
         if(!$user_id){
@@ -87,10 +93,11 @@
 
         if ($storedHash && password_verify($passwd, $storedHash)) {
             $session_token = bin2hex(random_bytes(16));
+            $ses_tok_hash = hash_hmac('sha256', $session_token, SESSION_SECRET);
             setcookie("session_token", $session_token, time() + (86400 * 30), "/");
             $stmt = $pdo->prepare("INSERT INTO sessions (hash, user_id) VALUES (:token, (SELECT id FROM users WHERE username = :username))");
             $stmt->execute([
-                ':token' => $session_token,
+                ':token' => $ses_tok_hash,
                 ':username' => $username
             ]);
         } else {
@@ -101,8 +108,9 @@
     }
 
     function fetch_user_id($pdo) {
+        $computed_cookie = hash_hmac('sha256', $_COOKIE['session_token'], SESSION_SECRET);
         $stmt = $pdo->prepare("SELECT user_id FROM sessions WHERE hash = :token");
-        $stmt->execute([':token' => $_COOKIE['session_token']]);
+        $stmt->execute([':token' => $computed_cookie]);
         return $stmt->fetchColumn();
     }
 

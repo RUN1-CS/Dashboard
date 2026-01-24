@@ -37,10 +37,6 @@ try{
         <span id="add-connections">Add Connection</span>
         <br>
         <span id="remove-connections">Remove Connections</span>
-        <hr>
-        <span id="save-board">Save Board</span>
-        <br>
-        <span id="logout">Log out</span>
     </div>
 
     <svg id="lines-svg">
@@ -66,7 +62,7 @@ try{
                     <label for="ch-color">Tablet Color: </label>
                     <input type="color" id="ch-color" name="ch-color">
                     <br>
-                    <input type="submit" id="ch-sub">
+                    <button type="submit" id="ch-sub">Submit Edit</button>
                 </form>
             </div>
             <div id="mpop-dash-settings"></div>
@@ -75,11 +71,24 @@ try{
                     <label for="connect">Connect with id(): </label>
                     <input type="text" id="connect" name="connect">
 
-                    <input type="submit" id="connect-sub">
+                    <button type="submit" id="connect-sub">Connect</button>
                 </form>
             </div>
         </div>
     </main>
+    <aside id="util-menu">
+        <div id="to-do-list">
+            <h3>To-Do List</h3>
+        </div>
+        <div id="newTaskContainer">
+            <input type="text" id="newTaskText" placeholder="New Task">
+            <button id="add-task">+</button>
+        </div>
+        <hr>
+        <span id="save-board">Save Board</span>
+        <br>
+        <span id="logout">Log out</span>
+    </aside>
     <script src="/javascript/dashboard.js"></script>
 </body>
 </html>

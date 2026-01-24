@@ -26,3 +26,26 @@ passwdInput.addEventListener("change", () => {
 
   console.log(score);
 });
+
+function getRandomRgb() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  if (r * 0.299 + g * 0.587 + b * 0.114 > 186) {
+    return { rgb: `rgb(${r}, ${g}, ${b})`, dark: false };
+  }
+  return { rgb: `rgb(${r}, ${g}, ${b})`, dark: true };
+}
+
+const logSub = document.getElementById("login_sub");
+const regSub = document.getElementById("reg_sub");
+logSub.addEventListener("mouseover", () => {
+  const color = getRandomRgb();
+  logSub.style.backgroundColor = color.rgb;
+  logSub.style.color = color.dark ? "white" : "black";
+});
+regSub.addEventListener("mouseover", () => {
+  const color = getRandomRgb();
+  regSub.style.backgroundColor = color.rgb;
+  regSub.style.color = color.dark ? "white" : "black";
+});

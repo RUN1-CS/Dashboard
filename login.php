@@ -7,31 +7,55 @@
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-    <main>
+    <main id="forms">
         <form method="POST" action="/validation.php">
-            <input type="hidden" name="type" value="register">
-            <label for="username_reg">Username: </label>
-            <input type="text" name="username_reg" id="username_reg" required><br>
-            <label for="email_reg">Email: </label>
-            <input type="email" name="email_reg" id="email_reg" placeholder="Email" required><br>
-            <label for="passwd_reg">Password: </label>
-            <input type="password" name="passwd_reg" id="passwd_reg" minlength="8" required><br>
-            <label for="passwd_verify">Verify Password: </label>
-            <input type="password" name="passwd_verify" id="passwd_verify" minlength="8" required><br>
-            <div id="strengthBarContainer">
-                <div id="strengthBar"></div>
-            </div>
-            <button type="submit" id="reg_sub">Register</button>
+            <table>
+                <caption><h2>Register</h2></caption>
+                <input type="hidden" name="type" value="register">
+                <tr>
+                    <td><label for="username_reg">Username: </label></td>
+                    <td><input type="text" name="username_reg" id="username_reg" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email_reg">Email: </label></td>
+                    <td><input type="email" name="email_reg" id="email_reg" required></td>
+                </tr>
+                <tr>
+                    <td><label for="passwd_reg">Password: </label></td>
+                    <td><input type="password" name="passwd_reg" id="passwd_reg" minlength="8" required>
+                        <div id="strengthBarContainer">
+                            <div id="strengthBar"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="passwd_verify">Verify Password: </label></td>
+                    <td><input type="password" name="passwd_verify" id="passwd_verify" minlength="8" required></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="submit" id="reg_sub">Register</button></td>
+                </tr>
+            </table>
         </form>
         <br>
         <form method="POST" action="/validation.php">
-            <input type="hidden" name="type" value="login">
-            <label for="username_login">Username: </label>
-            <input type="text" name="username_login" id="username_login" required><br>
-            <label for="passwd_login">Password: </label>
-            <input type="password" name="passwd_login" id="passwd_login" minlength="8" required><br>
-            <button type="submit" id="login_sub">Login</button>
+            <table>
+                <caption><h2>Login</h2></caption>
+                <input type="hidden" name="type" value="login">
+                <tr>
+                    <td><label for="username_login">Username: </label></td>
+                    <td><input type="text" name="username_login" id="username_login" required></td>
+                </tr>
+                <tr>
+                    <td><label for="passwd_login">Password: </label></td>
+                    <td><input type="password" name="passwd_login" id="passwd_login" minlength="8" required></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="submit" id="login_sub">Login</button></td>
+                </tr>
+            </table>
         </form>
         <script src="/javascript/login.js"></script>
     </main>
 </body>
+</html>

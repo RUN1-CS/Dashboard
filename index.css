@@ -52,34 +52,48 @@ body {
   font-size: 1.5em;
 }
 
+#mpop {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  border-radius: 28px;
+  width: 20em;
+  flex-wrap: wrap;
+  padding: 2rem;
+  overflow: hidden;
+  filter: drop-shadow(-8px -10px 46px #0000005f);
+  backdrop-filter: brightness(1.1) blur(2px);
+}
+
 #action-menu {
   position: absolute;
   z-index: 1000;
   display: none;
-  background-color: black;
   color: white;
   padding: 0.2em;
+  overflow: hidden;
+  border-radius: 8px;
+  filter: drop-shadow(-8px -10px 46px #0000005f);
+  backdrop-filter: brightness(1.1) blur(2px);
 }
 #action-menu > hr {
   margin: 0.2em 0;
   color: white;
 }
-#mpop {
-  position: absolute;
-  z-index: 1000;
-  display: none;
-}
 #mpop-edit {
+  background: none;
   display: none;
 }
 #mpop-dash-settings {
+  background: none;
   display: none;
 }
 #mpop-connect {
+  background: none;
   display: none;
 }
 
-svg {
+#lines-svg {
   z-index: 500;
   position: absolute;
   top: 0;
@@ -90,8 +104,8 @@ svg {
 }
 
 #strengthBarContainer {
-  width: 300px;
-  height: 20px;
+  width: 100%;
+  height: 1.5em;
   background-color: #ddd;
   border-radius: 5px;
   overflow: hidden;
@@ -105,4 +119,83 @@ svg {
   transition:
     width 0.3s,
     background-color 0.3s;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  width: 100%;
+  height: 2em;
+  box-sizing: border-box;
+}
+
+table {
+  width: 30em;
+}
+
+td[colspan="2"] {
+  text-align: center;
+}
+
+button[type="submit"] {
+  width: 25%;
+  height: 2.5em;
+  font-size: 1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+
+button[type="submit"]:hover {
+  transform: scale(1.1);
+}
+
+#forms {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#util-menu {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  height: 100%;
+  width: 10em;
+  overflow: hidden;
+  border-radius: 8px;
+  filter: drop-shadow(-8px -10px 46px #0000005f);
+  backdrop-filter: brightness(1.1) blur(2px);
+  padding: 0.5em;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-bottom: 0.5em;
+}
+
+#newTaskContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 1em;
+}
+
+#connect-sub,
+#ch-sub {
+  width: 100%;
+  height: 2.5em;
+  font-size: 1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
