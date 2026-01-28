@@ -63,6 +63,7 @@
             die("Cannot access outside hosts");
         }
     }
+    expireTokens();
     validate();
 
     require 'dash-config.php';
@@ -121,5 +122,19 @@
             setcookie("session_token", "", time() - 3600, "/");
         }
         exit();
+    }
+
+    function expireTokens(){
+        global $pdo;
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $stmt = $pdo->query("SELECT hash, started_at FROM sessions");
+        while( $row = $stmt->fetch(PDO::FETCH_ASSOC) ){
+            $dbTime = new DateTimeImmutable($row['started_at'], new DateTimeZone('UTC'));
+            $invalid = ($now->getTimestamp() - $dbTime->getTimestamp()) >= 12 * 60 * 60;
+            if( $invalid ){
+                $delStmt = $pdo->prepare("DELETE FROM sessions WHERE hash = :token");
+                $delStmt->execute([':token' => $row['hash']]);
+            }
+        }
     }
 ?>

@@ -23,8 +23,8 @@ _Everything happens visually — just right-click and manage your workflow!_
 ## Update Roadmap
 
 1. Core mechanics (Done)
-2. Backend (Semi-Done)
-3. GUI settings
+2. Backend (I think Done)
+3. GUI settings (Improved, maybe even done)
 4. Additional features (future)
 
 ---
