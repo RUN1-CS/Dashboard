@@ -199,3 +199,15 @@ button[type="submit"]:hover {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.menu-item {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid white;
+}

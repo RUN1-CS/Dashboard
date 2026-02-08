@@ -28,15 +28,14 @@ try{
     </div>
 
     <div id="action-menu">
-        <span id="add-tablet">Add Tablet</span>
-        <br>
-        <span id="edit-tablet">Edit Tablet</span>
-        <br>
+        <span id="add-tablet">Add Tablet</span><br>
+        <div class="tablet-req">
+        <span id="edit-tablet">Edit Tablet</span><br>
         <span id="delete-tablet">Delete Tablet</span>
         <hr>
-        <span id="add-connections">Add Connection</span>
-        <br>
+        <span id="add-connections">Add Connection</span><br>
         <span id="remove-connections">Remove Connections</span>
+        </div>
     </div>
 
     <svg id="lines-svg">
@@ -85,9 +84,9 @@ try{
             <button id="add-task">+</button>
         </div>
         <hr>
-        <span id="save-board">Save Board</span>
+        <span id="save-board" class="menu-item">Save Board</span>
         <br>
-        <span id="logout">Log out</span>
+        <span id="logout" class="menu-item">Log out</span>
     </aside>
     <script src="/javascript/dashboard.js"></script>
 </body>

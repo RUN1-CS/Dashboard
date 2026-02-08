@@ -143,6 +143,13 @@ saveBoard.addEventListener("click", () => {
 document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   clicked = document.elementFromPoint(mouse.x, mouse.y);
+  const tab_req = document.querySelector(".tablet-req");
+  if (!clicked || !clicked.classList.contains("tablet")) {
+    clicked = null;
+    tab_req.style.display = "none";
+  } else {
+    tab_req.style.display = "block";
+  }
   am.style.display = "block";
   am.style.top = mouse.y - 5 + "px";
   am.style.left = mouse.x - 5 + "px";
