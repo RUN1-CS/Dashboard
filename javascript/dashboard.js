@@ -116,24 +116,6 @@ const removeConns = document.getElementById("remove-connections");
 const submitBtn = document.getElementById("ch-sub");
 const connectBtn = document.getElementById("connect-sub");
 const saveBoard = document.getElementById("save-board");
-const logout = document.getElementById("logout");
-
-logout.addEventListener("click", () => {
-  fetch("dash-api.php", {
-    method: "POST",
-    body: JSON.stringify({ action: "logout" }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.text())
-    .then((text) => {
-      window.location.href = "index.php";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-});
 
 saveBoard.addEventListener("click", () => {
   save();
@@ -262,6 +244,7 @@ connectBtn.addEventListener("click", (e) => {
 });
 
 function save() {
+  if (!tablets.length && !lines.length && !todos.length) return;
   const JSONdata = {
     tablets: tablets.map((t) => ({
       id: t.id,
@@ -315,8 +298,9 @@ document.addEventListener("DOMContentLoaded", () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      if (!data) return;
+      data = JSON.parse(data);
       tablets = [];
+      if (!data) return;
       tablets = data.tablets.map((tData) => {
         const color = tData.color || "#3498db";
         const newTablet = tablet.cloneNode(true);

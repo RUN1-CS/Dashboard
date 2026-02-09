@@ -1,3 +1,9 @@
+<?php
+
+// This file handles user registration, login, session management, and logout.
+// Modify only if you know what you're doing, as it directly affects user authentication and security.
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./login.css">
 </head>
 <body>
     <main id="forms">

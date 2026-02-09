@@ -1,12 +1,15 @@
 <?php
-try{
-    if (!function_exists('validate')) {
-        require_once 'validation.php';
-    }
-    validate();
-}catch(Exception $e){
-    die($e->getMessage());
-}
+/*
+Project: Dashboard
+Made by: Mysterio/Run1/Run1-cs
+License: MIT
+
+I hope you find this project useful and fun to use! If you have any questions or suggestions, feel free to reach out to me.
+*/
+
+require __DIR__ . '/validation.php';
+global $pdo;
+validate($pdo);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,7 +89,10 @@ try{
         <hr>
         <span id="save-board" class="menu-item">Save Board</span>
         <br>
-        <span id="logout" class="menu-item">Log out</span>
+        <form action="validation.php" method="POST">
+            <input type="hidden" name="type" value="logout">
+            <button type="submit" id="logout-btn" class="menu-item">Logout</button>
+        </form>
     </aside>
     <script src="/javascript/dashboard.js"></script>
 </body>

@@ -1,0 +1,14 @@
+button[type="submit"] {
+  width: 25%;
+  height: 2.5em;
+  font-size: 1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+button[type="submit"]:hover {
+  transform: scale(1.1);
+}
