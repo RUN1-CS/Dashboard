@@ -1,0 +1,31 @@
+# PHP && Apache image
+FROM php:8.2-apache
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Enable Apache modules
+RUN a2enmod rewrite headers
+
+# Copy Apache vhost configuration
+COPY ./apache/vhost.conf /etc/apache2/sites-available/000-default.conf
+
+# Copy app code
+COPY ./src /var/www/html/
+
+# Optionally install Composer
+COPY composer.json composer.lock ./
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');" \
+    && composer install --no-dev --optimize-autoloader
+
+# Non-root user (if needed)
+# RUN useradd -m appuser && chown -R appuser:www-data /var/www/html
+# USER appuser
+
+# Expose port 80
+EXPOSE 80
+
+# Start Apache in foreground
+CMD ["apache2-foreground"]
