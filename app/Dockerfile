@@ -11,14 +11,18 @@ RUN a2enmod rewrite headers
 COPY ./apache/vhost.conf /etc/apache2/sites-available/000-default.conf
 
 # Copy app code
-COPY ./src /var/www/html/
+COPY app/src/ ./
 
 # Optionally install Composer
-COPY composer.json composer.lock ./
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');" \
-    && composer install --no-dev --optimize-autoloader
+COPY app/composer.json ./
+# COPY app/composer.lock ./
+
+# Install dependencies and PHP extensions
+RUN apt-get update && \
+    apt-get install -y libpq-dev && \
+    docker-php-ext-install pdo pdo_pgsql && \
+    rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install pdo pdo_pgsql
 
 # Non-root user (if needed)
 # RUN useradd -m appuser && chown -R appuser:www-data /var/www/html
