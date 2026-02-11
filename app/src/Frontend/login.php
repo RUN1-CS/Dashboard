@@ -2,7 +2,6 @@
 
 // This file handles user registration, login, session management, and logout.
 // Modify only if you know what you're doing, as it directly affects user authentication and security.
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +14,7 @@
 </head>
 <body>
     <main id="forms">
-        <form method="POST" action="/validation.php">
+        <form method="POST" action="submit.php">
             <table>
                 <caption><h2>Register</h2></caption>
                 <input type="hidden" name="type" value="register">
@@ -45,7 +44,7 @@
             </table>
         </form>
         <br>
-        <form method="POST" action="/validation.php">
+        <form method="POST" action="submit.php">
             <table>
                 <caption><h2>Login</h2></caption>
                 <input type="hidden" name="type" value="login">

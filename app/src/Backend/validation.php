@@ -129,30 +129,31 @@
         }
     }
 
+    function form_submit($pdo){
+        // Handle form submission
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Login || Register
+            $type = $_POST['type'] ?? '';
 
-    // Handle form submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Login || Register
-        $type = $_POST['type'] ?? '';
-
-        if ($type === 'register') {
-            $username = $_POST['username_reg'] ?? '';
-            $email = $_POST['email_reg'] ?? '';
-            $passwd = $_POST['passwd_reg'] ?? '';
-            $passwd_verify = $_POST['passwd_verify'] ?? '';
-            if ($passwd !== $passwd_verify) {
-                redirect_n_die("Passwords do not match");
-            } else {
-                register( $username, $email, $passwd, $pdo);
+            if ($type === 'register') {
+                $username = $_POST['username_reg'] ?? '';
+                $email = $_POST['email_reg'] ?? '';
+                $passwd = $_POST['passwd_reg'] ?? '';
+                $passwd_verify = $_POST['passwd_verify'] ?? '';
+                if ($passwd !== $passwd_verify) {
+                    redirect_n_die("Passwords do not match");
+                } else {
+                    register( $username, $email, $passwd, $pdo);
+                }
+            } else if ($type === 'login') {
+                $username = $_POST['username_login'] ?? '';
+                $passwd = $_POST['passwd_login'] ?? '';
+                login($username, $passwd, $pdo);
+            } else if ($type === 'logout') {
+                logout($pdo);
+                header('Location: login.php');
+                exit();
             }
-        } else if ($type === 'login') {
-            $username = $_POST['username_login'] ?? '';
-            $passwd = $_POST['passwd_login'] ?? '';
-            login($username, $passwd, $pdo);
-        } else if ($type === 'logout') {
-            logout($pdo);
-            header('Location: login.php');
-            exit();
+            validate($pdo);
         }
-        validate($pdo);
     }

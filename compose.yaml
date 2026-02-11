@@ -19,16 +19,16 @@ services:
       - dashboard_net
   db:
     image: postgres:18.1
-    restart: always
+    container_name: dashboard-db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - ./db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    expose:
-      - "5432"
+      - ./db-data:/var/lib/postgresql:Z
+    ports:
+      - "5432:5432"
     networks:
       - dashboard_net
 networks:

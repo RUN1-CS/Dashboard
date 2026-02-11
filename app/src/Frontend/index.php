@@ -5,9 +5,10 @@ Made by: Mysterio/Run1/Run1-cs
 License: MIT
 
 I hope you find this project useful and fun to use! If you have any questions or suggestions, feel free to reach out to me.
-*/
+*/ 
+define('BACKEND_PATH', '/var/www/html/Backend');
 
-require __DIR__ . '/validation.php';
+require BACKEND_PATH . '/validation.php';
 global $pdo;
 validate($pdo);
 ?>
@@ -89,7 +90,7 @@ validate($pdo);
         <hr>
         <span id="save-board" class="menu-item">Save Board</span>
         <br>
-        <form action="validation.php" method="POST">
+        <form action="submit.php" method="POST">
             <input type="hidden" name="type" value="logout">
             <button type="submit" id="logout-btn" class="menu-item">Logout</button>
         </form>

@@ -4,29 +4,22 @@ FROM php:8.2-apache
 # Set working directory
 WORKDIR /var/www/html
 
-# Enable Apache modules
-RUN a2enmod rewrite headers
+# Install system dependencies first
+RUN apt-get update && apt-get install -y libpq-dev && rm -rf /var/lib/apt/lists/*
 
-# Copy Apache vhost configuration
-COPY ./apache/vhost.conf /etc/apache2/sites-available/000-default.conf
+# Enable required Apache modules BEFORE copying vhost
+RUN a2enmod rewrite headers proxy proxy_http
+
+# Copy Apache vhost configuration AFTER enabling modules
+COPY ./apache/vhost.conf /etc/apache2/sites-enabled/000-default.conf
+RUN a2ensite 000-default.conf
 
 # Copy app code
 COPY app/src/ ./
-
-# Optionally install Composer
 COPY app/composer.json ./
-# COPY app/composer.lock ./
 
-# Install dependencies and PHP extensions
-RUN apt-get update && \
-    apt-get install -y libpq-dev && \
-    docker-php-ext-install pdo pdo_pgsql && \
-    rm -rf /var/lib/apt/lists/*
+# Install PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql
-
-# Non-root user (if needed)
-# RUN useradd -m appuser && chown -R appuser:www-data /var/www/html
-# USER appuser
 
 # Expose port 80
 EXPOSE 80

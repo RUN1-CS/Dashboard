@@ -275,9 +275,7 @@ function save() {
     },
   })
     .then((response) => response.text())
-    .then((text) => {
-      if (text) console.log("Success:", JSON.parse(text));
-    })
+    //.then((text) => {console.log("Server response:", text);})
     .catch((error) => {
       console.error("Error:", error);
     });
@@ -298,7 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      data = JSON.parse(data);
       tablets = [];
       if (!data) return;
       tablets = data.tablets.map((tData) => {
