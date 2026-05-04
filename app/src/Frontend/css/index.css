@@ -15,6 +15,10 @@ body {
   border-radius: 1em;
   overflow: hidden;
   box-shadow: 0 0 1em black;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .nomouse {
@@ -31,6 +35,10 @@ body {
   min-width: 300px;
   background-color: darkgray;
   padding: 0.5em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .tablet > .body {
@@ -38,6 +46,10 @@ body {
   min-width: 300px;
   min-height: 200px;
   padding: 0.5em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .tablet > .footer {
@@ -45,6 +57,10 @@ body {
   min-width: 300px;
   background-color: darkgray;
   padding: 0.5em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .tablet > h1 {

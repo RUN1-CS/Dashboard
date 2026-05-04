@@ -1,5 +1,12 @@
-import { moveTablet, XMoving } from "./dashboard.js";
+import { moveTablet, XMoving, lines } from "./dashboard.js";
 import type { cords } from "./dashboard.js";
+
+interface LineCordSet {
+  x1: string;
+  y1: string;
+  x2: string;
+  y2: string;
+}
 
 class Tablet {
   id: string;
@@ -67,12 +74,12 @@ class Line {
   y1: string;
   x2: string;
   y2: string;
-  constructor(Tab1: Tablet, Tab2: Tablet, Lines: Line[], Doc: Document) {
+  constructor(Tab1: Tablet, Tab2: Tablet) {
     this.Tab1 = Tab1;
     this.Tab2 = Tab2;
-    this.id = String(Date.now() + Math.random());
+    this.id = String(Math.ceil(Date.now() + Math.random()));
 
-    this.el = Doc.createElementNS("http://www.w3.org/2000/svg", "line");
+    this.el = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
     this.el.id = this.id;
 
@@ -82,19 +89,24 @@ class Line {
     this.x2 = values.x2;
     this.y2 = values.y2;
 
-    Lines.push(this);
-    Doc.getElementById("lines-svg")?.appendChild(this.el);
+    document.getElementById("lines-svg")?.appendChild(this.el);
     this.update();
   }
 
   update() {
+    const values: LineCordSet = this.XY();
+    this.x1 = values.x1;
+    this.y1 = values.y1;
+    this.x2 = values.x2;
+    this.y2 = values.y2;
+
     this.el.setAttribute("x1", this.x1);
     this.el.setAttribute("y1", this.y1);
     this.el.setAttribute("x2", this.x2);
     this.el.setAttribute("y2", this.y2);
   }
 
-  XY() {
+  XY(): LineCordSet {
     const rect1 = this.Tab1.el?.getBoundingClientRect();
     const rect2 = this.Tab2.el?.getBoundingClientRect();
 

@@ -22,7 +22,7 @@ interface dataLine {
 let mouse: cords = { x: 0, y: 0 };
 let moving: boolean = false;
 let tablets: Tablet[] = [];
-let lines: Line[] = [];
+export let lines: Line[] = [];
 
 export function XMoving() {
   moving = !moving;
@@ -122,7 +122,6 @@ function createTablet(
   color = "#3498db",
   pos: cords = { x: 100, y: 100 },
 ) {
-  console.log(`Creating tablet with id ${id} at position (${pos.x}, ${pos.y})`);
   const newTablet = document.createElement("div");
   newTablet.className = "tablet tablet-part";
   newTablet.id = id;
@@ -142,9 +141,9 @@ function createTablet(
 }
 
 function createLine(tab1: Tablet, tab2: Tablet) {
-  const L = new Line(tab1, tab2, lines, document);
-  lines.push(L);
-  return L;
+  const l = new Line(tab1, tab2);
+  lines.push(l);
+  return l;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -302,10 +301,12 @@ document.addEventListener("DOMContentLoaded", () => {
       for (let t of tablets) {
         if (t.id == clicked?.id) {
           t.update(id, title, content, notes);
-          t.el!.style.backgroundColor = lighten(color, 0.4);
           (t.el!.querySelector(
             ".header",
           ) as HTMLElement)!.style.backgroundColor = color;
+          (t.el!.querySelector(
+            ".body",
+          ) as HTMLElement | null)!.style.backgroundColor = lighten(color, 0.4);
           (t.el!.querySelector(
             ".footer",
           ) as HTMLElement)!.style.backgroundColor = color;
@@ -326,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (t1.id == clicked?.id) {
           for (let t2 of tablets) {
             if (t2.id == connect && t1.id != t2.id) {
-              new Line(t1, t2, lines, document);
+              createLine(t1, t2);
             }
           }
         }
