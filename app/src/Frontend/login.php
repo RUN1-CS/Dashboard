@@ -11,6 +11,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/login.css">
+    <script src="./dist/login.js"></script>
 </head>
 <body>
     <main id="forms">
@@ -61,7 +62,6 @@
                 </tr>
             </table>
         </form>
-        <script src="/javascript/login.js"></script>
     </main>
 </body>
 </html>

@@ -19,58 +19,49 @@ validate($pdo);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="./css/index.css">
+    <script src="./dist/dashboard.js" type="module"></script>
 </head>
 <body>
-    <div class="tablet" id="1">
-        <div class="header nomouse"><h1>New Tablet</h1></div>
-        <div class="body nomouse">
-            Content
-        </div>
-        <div class="footer nomouse">
-            Notes
-        </div>
-    </div>
-
     <div id="action-menu">
         <span id="add-tablet">Add Tablet</span><br>
         <div class="tablet-req">
-        <span id="edit-tablet">Edit Tablet</span><br>
-        <span id="delete-tablet">Delete Tablet</span>
-        <hr>
-        <span id="add-connections">Add Connection</span><br>
-        <span id="remove-connections">Remove Connections</span>
+            <span id="edit-tablet">Edit Tablet</span><br>
+            <span id="delete-tablet">Delete Tablet</span>
+            <hr>
+            <span id="add-connections">Add Connection</span><br>
+            <span id="remove-connections">Remove Connections</span>
         </div>
+        <hr>
+        <span id="save-board">Save Board</span>
     </div>
 
-    <svg id="lines-svg">
-        <line id="TheLine" x1="0" y1="0" x2="0" y2="0" stroke="black" stroke-width="6"/>
-    </svg>
+    <svg id="lines-svg"></svg>
     <main id="dash-body">
         <div id="mpop">
             <h3 id="mpop-title"></h3>
             <div id="mpop-edit">
-                <form id="ch-tablet-form">
+                <form id="ch-tablet-form" type="POST">
                     <label for="ch-id">Tablet Id: </label>
-                    <input type="text" id="ch-id" name="ch-id">
+                    <input type="text" id="chId" name="chId">
                     <br>
                     <label for="ch-title">Tablet Title: </label>
-                    <input type="text" id="ch-title" name="ch-title">
+                    <input type="text" id="chTitle" name="chTitle">
                     <br>
                     <label for="ch-content">Table Content: </label>
-                    <input type="text" id="ch-content" name="ch-content">
+                    <input type="text" id="chContent" name="chContent">
                     <br>
                     <label for="ch-notes">Tablet Notes: </label>
-                    <input type="text" id="ch-notes" name="ch-notes">
+                    <input type="text" id="chNotes" name="chNotes">
                     <br>
                     <label for="ch-color">Tablet Color: </label>
-                    <input type="color" id="ch-color" name="ch-color">
+                    <input type="color" id="chColor" name="chColor">
                     <br>
-                    <button type="submit" id="ch-sub">Submit Edit</button>
+                    <button type="submit" id="chSub">Submit Edit</button>
                 </form>
             </div>
             <div id="mpop-dash-settings"></div>
             <div id="mpop-connect">
-                <form>
+                <form id="connect-form" type="POST">
                     <label for="connect">Connect with id(): </label>
                     <input type="text" id="connect" name="connect">
 
@@ -79,22 +70,5 @@ validate($pdo);
             </div>
         </div>
     </main>
-    <aside id="util-menu">
-        <div id="to-do-list">
-            <h3>To-Do List</h3>
-        </div>
-        <div id="newTaskContainer">
-            <input type="text" id="newTaskText" placeholder="New Task">
-            <button id="add-task">+</button>
-        </div>
-        <hr>
-        <span id="save-board" class="menu-item">Save Board</span>
-        <br>
-        <form action="submit.php" method="POST">
-            <input type="hidden" name="type" value="logout">
-            <button type="submit" id="logout-btn" class="menu-item">Logout</button>
-        </form>
-    </aside>
-    <script src="/javascript/dashboard.js"></script>
 </body>
 </html>
