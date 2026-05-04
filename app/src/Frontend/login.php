@@ -11,7 +11,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/login.css">
-    <script src="./dist/login.js"></script>
+    <script src="./dist/login.js" type="module"></script>
 </head>
 <body>
     <main id="forms">

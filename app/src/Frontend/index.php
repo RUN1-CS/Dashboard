@@ -31,12 +31,16 @@ validate($pdo);
             <span id="add-connections">Add Connection</span><br>
             <span id="remove-connections">Remove Connections</span>
         </div>
-        <hr>
-        <span id="save-board">Save Board</span>
     </div>
 
     <svg id="lines-svg"></svg>
     <main id="dash-body">
+        <div class="row">
+            <a href="todo.php">Todo List</a>
+            <button id="save">Save</button>
+            <!-- I will later add an account center -->
+            <button id="logout">Logout</button>
+        </div>
         <div id="mpop">
             <h3 id="mpop-title"></h3>
             <div id="mpop-edit">

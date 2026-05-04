@@ -1,3 +1,5 @@
+export {};
+
 addEventListener("DOMContentLoaded", () => {
   const passwdInput = document.getElementById(
     "passwd_reg",
@@ -26,8 +28,6 @@ addEventListener("DOMContentLoaded", () => {
     } else if (score === 5) {
       strengthBar!.style.backgroundColor = "green";
     }
-
-    console.log(score);
   });
 
   function getRandomRgb() {

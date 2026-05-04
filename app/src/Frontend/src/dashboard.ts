@@ -70,7 +70,7 @@ function save() {
   };
   fetch("dash-api.php", {
     method: "POST",
-    body: JSON.stringify({ action: "save", data: JSONdata }),
+    body: JSON.stringify({ action: "save", type: "dashboard", data: JSONdata }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -147,53 +147,16 @@ function createLine(tab1: Tablet, tab2: Tablet) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("dash-api.php", {
-    method: "POST",
-    body: JSON.stringify({ action: "load" }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      tablets = [];
-      if (!data) return;
-      tablets = data.tablets.map((tData: dataTablet) => {
-        return createTablet(
-          tData.id,
-          tData.name,
-          tData.content,
-          tData.notes,
-          tData.color,
-          tData.pos,
-        );
-      });
-      lines = data.lines.map((lData: dataLine) => {
-        return createLine(
-          tablets.find((t) => t.id == lData.tab1Id)!,
-          tablets.find((t) => t.id == lData.tab2Id)!,
-        );
-      });
-    });
-  saveLoop();
-
-  // event listeners are handled by Tablet instances
-
-  document.addEventListener("mousemove", (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  let clicked: HTMLElement | null = null;
-
   const am = document.getElementById("action-menu") as HTMLElement | null;
+  if (!am) {
+    return;
+  }
   const add = document.getElementById("add-tablet") as HTMLElement | null;
   const del = document.getElementById("delete-tablet") as HTMLElement | null;
   const ch = document.getElementById("edit-tablet") as HTMLElement | null;
-  const saveBoard = document.getElementById("save-board") as HTMLElement | null;
+  const saveBoard = document.getElementById("save") as HTMLElement | null;
   saveBoard!.addEventListener("click", () => {
     save();
-    am!.style.display = "none";
   });
 
   const addConn = document.getElementById(
@@ -208,12 +171,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const connectForm = document.getElementById(
     "connect-form",
   ) as HTMLFormElement;
-  //const saveBoard = document.getElementById("save-board") as HTMLElement | null;
 
-  //saveBoard!.addEventListener("click", () => {
-  //  save();
-  //  am!.style.display = "none";
-  //});
+  fetch("dash-api.php", {
+    method: "POST",
+    body: JSON.stringify({ action: "load", type: "dashboard" }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      tablets = [];
+      if (!data) return;
+      if (data.tablets) {
+        tablets = data.tablets.map((tData: dataTablet) => {
+          return createTablet(
+            tData.id,
+            tData.name,
+            tData.content,
+            tData.notes,
+            tData.color,
+            tData.pos,
+          );
+        });
+      }
+      if (data.lines) {
+        lines = data.lines.map((lData: dataLine) => {
+          return createLine(
+            tablets.find((t) => t.id == lData.tab1Id)!,
+            tablets.find((t) => t.id == lData.tab2Id)!,
+          );
+        });
+      }
+    });
+  saveLoop();
+
+  // event listeners are handled by Tablet instances
+
+  document.addEventListener("mousemove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  let clicked: HTMLElement | null = null;
 
   document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
@@ -333,5 +333,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
+  });
+
+  // Will be moved into account center when I make one
+  const logoutBtn = document.getElementById("logout") as HTMLElement | null;
+  logoutBtn!.addEventListener("click", () => {
+    fetch("dash-api.php", {
+      method: "POST",
+      body: JSON.stringify({ action: "logout" }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        if (data === "logged_out") {
+          window.location.href = "login.php";
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   });
 });

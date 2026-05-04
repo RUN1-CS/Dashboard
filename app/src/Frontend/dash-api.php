@@ -23,15 +23,27 @@ switch($action){
             $JSONdata = $data['data'] ?? '';
             $JSONdata = json_encode(encryptData(json_encode($JSONdata), deriveKey()));
 
-            $stmt = $pdo->prepare("SELECT * FROM boards WHERE owner = :user_id");
+            switch($data['type'] ?? ''){
+                case 'dashboard':
+                    $table = 'boards';
+                    break;
+                case 'todo':
+                    $table = 'todos';
+                    break;
+                default:
+                    reply('error', 'Invalid save type specified');
+                    exit;
+            }
+
+            $stmt = $pdo->prepare("SELECT * FROM $table WHERE owner = :user_id");
             $stmt->execute([':user_id' => $user_id]);
             $exists = $stmt->fetchColumn();
             if( !$exists ){
-                $stmt = $pdo->prepare("INSERT INTO boards (owner, data) VALUES (:user_id, :data)");
+                $stmt = $pdo->prepare("INSERT INTO $table (owner, data) VALUES (:user_id, :data)");
                 $stmt->execute([':user_id' => $user_id, ':data' => $JSONdata]);
                 break;
             }
-            $stmt = $pdo->prepare("UPDATE boards SET data = :data WHERE owner = :user_id");
+            $stmt = $pdo->prepare("UPDATE $table SET data = :data WHERE owner = :user_id");
             $stmt->execute([':data' => $JSONdata, ':user_id' => $user_id]);
             reply('response', 'Successfully saved.');
         }catch(Exception $e){
@@ -41,7 +53,18 @@ switch($action){
     case 'load':
         $template = json_encode(["tablets" => [], "lines" => [], "todos" => []]);
         try{
-            $stmt = $pdo->prepare("SELECT data FROM boards WHERE owner = :user_id");
+            switch($data['type'] ?? ''){
+                case 'dashboard':
+                    $table = 'boards';
+                    break;
+                case 'todo':
+                    $table = 'todos';
+                    break;
+                default:
+                    reply('error', 'Invalid load type specified');
+                    exit;
+            }
+            $stmt = $pdo->prepare("SELECT data FROM $table WHERE owner = :user_id");
             $stmt->execute([':user_id' => $user_id]);
             $result = $stmt->fetchColumn();
             if(!$result){
@@ -57,6 +80,13 @@ switch($action){
             reply('error', 'Failed to load board: ' . $e->getMessage());
         }
         break;
+    case 'logout':
+        $_COOKIE['session_token'] = '';
+        setcookie('session_token', '', time() - 3600, "/");
+        reply('data', 'logged_out');
+        break;
+    default:
+        reply('error', 'Invalid action specified');
 }
 exit;
 

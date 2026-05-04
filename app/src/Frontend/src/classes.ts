@@ -53,15 +53,11 @@ class Todo {
   el: HTMLElement | null;
   done: boolean;
   text: string;
-  constructor(id: number) {
-    this.id = String(id);
+  constructor(id: string, done = false, text = "") {
+    this.id = id;
     this.el = document.getElementById("todo-" + this.id);
-    this.done = false;
-    const taskText = this.el?.querySelector(".tasktext") as
-      | HTMLInputElement
-      | HTMLTextAreaElement
-      | null;
-    this.text = taskText ? taskText.value : "";
+    this.done = done;
+    this.text = text;
   }
 }
 
