@@ -3,3 +3,7 @@
 
 # Node.js
 node_modules/
+
+# App
+db-data/
+dist/

@@ -43,8 +43,8 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-- PHP backend is isolated in `app/Backend`
-- Frontend lives in `app/Frontend`
+- PHP and TypeScript sources live in `app/src`
+- TypeScript is compiled to `dist` while the application image is built
 - PostgreSQL runs in a separate container with persistent storage
 - AJAX calls handle all frontend-backend communication
 - `.env` manages your DB connection safely
