@@ -1,20 +1,84 @@
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+:root {
+  /* Surfaces */
+  --desk: rgb(201, 166, 116);
+  --desk-deep: rgb(182, 146, 97);
+  --paper: #f7f3ea;
+  --bar: #e6dfd0;
+  --bar-edge: #d3c9b5;
+
+  /* Ink */
+  --ink: #2b2219;
+  --ink-soft: #6b5d4c;
+
+  /* Glass (popups and menus) */
+  --glass: rgba(43, 34, 25, 0.78);
+  --glass-edge: rgba(255, 255, 255, 0.18);
+
+  /* Accent */
+  --accent: #2f6f5e;
+  --accent-hover: #3a8570;
+  --accent-ink: #ffffff;
+  --focus: #f2b84b;
+
+  /* Shape and depth */
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+  --shadow-window:
+    0 1px 2px rgba(43, 34, 25, 0.25), 0 12px 32px rgba(43, 34, 25, 0.28);
+
+  --font:
+    "Avenir Next", "Segoe UI", system-ui, -apple-system, "Helvetica Neue",
+    sans-serif;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
 body {
   z-index: 0;
   margin: 0;
   padding: 0;
-  background-color: rgb(201, 166, 116);
-  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  background-color: var(--desk);
+  background-image: radial-gradient(
+    ellipse at 30% 20%,
+    rgba(255, 255, 255, 0.18),
+    transparent 60%
+  );
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
 }
 
+hr {
+  border: none;
+  border-top: 1px solid var(--glass-edge);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Tablet (draggable window)
+   ========================================================================== */
 .tablet {
   position: absolute;
   top: 10%;
   left: 10%;
-  background-color: whitesmoke;
-  border: solid;
-  border-radius: 1em;
+  background-color: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--bar-edge);
+  border-radius: var(--radius-l);
   overflow: hidden;
-  box-shadow: 0 0 1em black;
+  box-shadow: var(--shadow-window);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -30,55 +94,82 @@ body {
   -webkit-touch-callout: none;
 }
 
-.tablet > .header {
-  height: 20%;
+.tablet > .header,
+.tablet > .body,
+.tablet > .footer {
   min-width: 300px;
-  background-color: darkgray;
-  padding: 0.5em;
+  padding: 0.75em 1em;
+  box-sizing: border-box;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.tablet > .header {
+  height: 20%;
+  background-color: var(--bar);
+  border-top: 6px solid var(--tablet-color, var(--accent));
+  border-bottom: 1px solid var(--bar-edge);
+  cursor: grab;
+}
+
+.tablet > .header:active {
+  cursor: grabbing;
 }
 
 .tablet > .body {
   height: 60%;
-  min-width: 300px;
   min-height: 200px;
-  padding: 0.5em;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  background-color: color-mix(
+    in srgb,
+    var(--tablet-color, var(--paper)) 10%,
+    var(--paper)
+  );
 }
 
 .tablet > .footer {
   height: 20%;
-  min-width: 300px;
-  background-color: darkgray;
-  padding: 0.5em;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  background-color: color-mix(
+    in srgb,
+    var(--tablet-color, var(--bar)) 14%,
+    var(--paper)
+  );
+  border-top: 1px solid var(--bar-edge);
+  color: var(--ink-soft);
+  font-size: 0.9em;
 }
 
 .tablet > h1 {
   margin: 0;
   font-size: 1.5em;
+  font-weight: 650;
+  letter-spacing: -0.01em;
 }
 
+/* ==========================================================================
+   Popups and context menus
+   ========================================================================== */
 #mpop {
   display: none;
   position: absolute;
   z-index: 1000;
-  border-radius: 28px;
+  box-sizing: border-box;
   width: 20em;
   flex-wrap: wrap;
-  padding: 2rem;
+  padding: 1.5rem;
   overflow: hidden;
-  filter: drop-shadow(-8px -10px 46px #0000005f);
-  backdrop-filter: brightness(1.1) blur(2px);
+  color: white;
+  background-color: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 24px;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.35));
+  backdrop-filter: brightness(1.1) blur(10px);
+  -webkit-backdrop-filter: brightness(1.1) blur(10px);
+}
+
+#mpop table {
+  width: 100%;
 }
 
 #action-menu {
@@ -86,29 +177,62 @@ body {
   z-index: 1000;
   display: none;
   color: white;
-  padding: 0.2em;
+  padding: 0.3em;
   overflow: hidden;
-  border-radius: 8px;
-  filter: drop-shadow(-8px -10px 46px #0000005f);
-  backdrop-filter: brightness(1.1) blur(2px);
+  background-color: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-m);
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
+  backdrop-filter: brightness(1.1) blur(10px);
+  -webkit-backdrop-filter: brightness(1.1) blur(10px);
 }
+
 #action-menu > hr {
-  margin: 0.2em 0;
-  color: white;
+  margin: 0.3em 0;
 }
-#mpop-edit {
-  background: none;
-  display: none;
-}
-#mpop-dash-settings {
-  background: none;
-  display: none;
-}
+
+#mpop-edit,
+#mpop-dash-settings,
 #mpop-connect {
   background: none;
   display: none;
 }
 
+.menu-item {
+  cursor: pointer;
+  padding: 0.4em 0.75em;
+  border-radius: var(--radius-s);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  transition: background-color 0.12s;
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+#util-menu {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  height: 100%;
+  width: 10em;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0.5em;
+  color: white;
+  background-color: var(--glass);
+  border-left: 1px solid var(--glass-edge);
+  border-radius: var(--radius-m);
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.3));
+  backdrop-filter: brightness(1.1) blur(10px);
+  -webkit-backdrop-filter: brightness(1.1) blur(10px);
+}
+
+/* ==========================================================================
+   Connection lines
+   ========================================================================== */
 #lines-svg {
   z-index: 9999;
   position: absolute;
@@ -118,46 +242,17 @@ body {
   height: 100%;
   pointer-events: none;
 }
+
 line {
-  stroke: black;
+  stroke: var(--ink);
   stroke-width: 6;
+  stroke-linecap: round;
+  opacity: 0.85;
 }
 
-#strengthBarContainer {
-  width: 100%;
-  height: 1.5em;
-  background-color: #ddd;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-top: 5px;
-}
-
-#strengthBar {
-  height: 100%;
-  width: 0%;
-  background-color: red;
-  transition:
-    width 0.3s,
-    background-color 0.3s;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-textarea {
-  width: 100%;
-  height: 2em;
-  box-sizing: border-box;
-}
-
-table {
-  width: 30em;
-}
-
-td[colspan="2"] {
-  text-align: center;
-}
-
+/* ==========================================================================
+   Forms
+   ========================================================================== */
 #forms {
   display: flex;
   flex-direction: column;
@@ -165,64 +260,90 @@ td[colspan="2"] {
   align-items: center;
 }
 
-#util-menu {
-  position: absolute;
-  top: 0%;
-  right: 0%;
-  height: 100%;
-  width: 10em;
-  overflow: hidden;
-  border-radius: 8px;
-  filter: drop-shadow(-8px -10px 46px #0000005f);
-  backdrop-filter: brightness(1.1) blur(2px);
-  padding: 0.5em;
+table {
+  width: 30em;
+  max-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.4em;
 }
 
+td[colspan="2"] {
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  width: 100%;
+  height: 2.5em;
+  box-sizing: border-box;
+  padding: 0.4em 0.75em;
+  font: inherit;
+  color: var(--ink);
+  background-color: #fffdf8;
+  border: 1px solid var(--bar-edge);
+  border-radius: var(--radius-s);
+  transition:
+    border-color 0.12s,
+    box-shadow 0.12s;
+}
+
+textarea {
+  height: 2.5em;
+  min-height: 2.5em;
+  resize: vertical;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47, 111, 94, 0.25);
+}
+
+#strengthBarContainer {
+  width: 100%;
+  height: 0.6em;
+  background-color: var(--bar);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+#strengthBar {
+  height: 100%;
+  width: 0%;
+  background-color: red;
+  border-radius: 999px;
+  transition:
+    width 0.3s,
+    background-color 0.3s;
+}
+
+/* ==========================================================================
+   Tasks
+   ========================================================================== */
 .task {
   display: flex;
   align-items: center;
   flex-direction: row;
+  gap: 0.6em;
   margin-bottom: 0.5em;
+  padding: 0.4em 0.6em;
+  background-color: #fffdf8;
+  border: 1px solid var(--bar-edge);
+  border-radius: var(--radius-s);
 }
 
 #newTaskContainer {
   display: flex;
   align-items: center;
   flex-direction: row;
+  gap: 0.5em;
   margin-top: 1em;
-}
-
-#connect-sub,
-#ch-sub {
-  width: 100%;
-  height: 2.5em;
-  font-size: 1em;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.menu-item {
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid white;
-}
-
-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1em;
-  padding: 0;
-  margin: 0;
 }
 
 .row {
@@ -233,13 +354,75 @@ button {
   padding: 0.5em;
 }
 
+/* ==========================================================================
+   Buttons and links
+   ========================================================================== */
 a,
 button {
-  background-color: #4caf50;
-  color: white;
-  border-radius: 5px;
-  padding: 0.5em 1em;
-  text-decoration: none;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.5em 1.1em;
   overflow: hidden;
-  border-radius: 1em;
+  font: inherit;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+  cursor: pointer;
+  background-color: var(--accent);
+  border: none;
+  border-radius: 999px;
+  transition:
+    background-color 0.12s,
+    transform 0.08s;
+}
+
+a:hover,
+button:hover {
+  background-color: var(--accent-hover);
+}
+
+a:active,
+button:active {
+  transform: translateY(1px);
+}
+
+#connect-sub,
+#ch-sub {
+  width: 100%;
+  height: 2.75em;
+  padding: 0;
+  font-size: 1em;
+  color: var(--accent-ink);
+  background-color: var(--accent);
+  border: none;
+  border-radius: var(--radius-m);
+  cursor: pointer;
+}
+
+#connect-sub:hover,
+#ch-sub:hover {
+  background-color: var(--accent-hover);
+}
+
+/* ==========================================================================
+   Small screens and reduced motion
+   ========================================================================== */
+@media (max-width: 600px) {
+  .tablet {
+    left: 2%;
+    right: 2%;
+    max-width: 96%;
+  }
+
+  #mpop {
+    max-width: 92vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

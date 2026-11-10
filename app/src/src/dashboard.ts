@@ -1,22 +1,9 @@
 import { Line, Tablet } from "./classes.js";
+import type { dataLine, dataTablet } from "./classes.js";
 
 export interface cords {
   x: number;
   y: number;
-}
-
-interface dataTablet {
-  id: string;
-  name: string;
-  content: string;
-  notes: string;
-  color: string;
-  pos: cords;
-}
-
-interface dataLine {
-  tab1Id: string;
-  tab2Id: string;
 }
 
 let mouse: cords = { x: 0, y: 0 };
@@ -55,13 +42,11 @@ function save() {
   const JSONdata = {
     tablets: tablets.map((t) => ({
       id: t.id,
-      name: (t.el?.querySelector(".header h1") as HTMLElement | null)
-        ?.innerText,
-      content: (t.el?.querySelector(".body") as HTMLElement | null)?.innerText,
-      notes: (t.el?.querySelector(".footer") as HTMLElement | null)?.innerText,
+      name: t.name,
+      content: t.content,
+      notes: t.notes,
       pos: t.pos,
-      color: (t.el?.querySelector(".header") as HTMLElement | null)?.style
-        .backgroundColor,
+      color: t.color,
     })),
     lines: lines.map((l) => ({
       tab1Id: l.Tab1.id,
@@ -129,13 +114,14 @@ function createTablet(
   newTablet.style.position = "absolute";
   newTablet.style.left = pos.x + "px";
   newTablet.style.top = pos.y + "px";
+  newTablet.style.setProperty("--tablet-color", color);
   newTablet.innerHTML = `
-    <div class="header tablet-part" style="background-color:${color};"><h1>${name}</h1></div>
-    <div class="body tablet-part" style="background-color:${lighten(color)};">${content}</div>
-    <div class="footer tablet-part" style="background-color:${color};">${notes}</div>
+    <div class="header tablet-part"><h1>${name}</h1></div>
+    <div class="body tablet-part">${content}</div>
+    <div class="footer tablet-part">${notes}</div>
   `;
   document.body.appendChild(newTablet);
-  const t = new Tablet(newTablet.id, pos);
+  const t = new Tablet(newTablet.id, name, content, notes, color, pos);
   tablets.push(t);
   return t;
 }
@@ -300,16 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (id && title && content && notes && color) {
       for (let t of tablets) {
         if (t.id == clicked?.id) {
-          t.update(id, title, content, notes);
-          (t.el!.querySelector(
-            ".header",
-          ) as HTMLElement)!.style.backgroundColor = color;
-          (t.el!.querySelector(
-            ".body",
-          ) as HTMLElement | null)!.style.backgroundColor = lighten(color, 0.4);
-          (t.el!.querySelector(
-            ".footer",
-          ) as HTMLElement)!.style.backgroundColor = color;
+          t.update(id, title, content, notes, color);
         }
       }
     }

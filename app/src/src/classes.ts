@@ -1,6 +1,20 @@
 import { moveTablet, XMoving, lines } from "./dashboard.js";
 import type { cords } from "./dashboard.js";
 
+export interface dataTablet {
+  id: string;
+  name: string;
+  content: string;
+  notes: string;
+  color: string;
+  pos: cords;
+}
+
+export interface dataLine {
+  tab1Id: string;
+  tab2Id: string;
+}
+
 interface LineCordSet {
   x1: string;
   y1: string;
@@ -11,10 +25,25 @@ interface LineCordSet {
 class Tablet {
   id: string;
   el: HTMLElement | null;
+  name: string;
+  content: string;
+  notes: string;
+  color: string;
   pos: cords;
-  constructor(id: string, pos: cords = { x: 0, y: 0 }) {
+  constructor(
+    id: string,
+    name = "New Tablet",
+    content = "",
+    notes = "",
+    color = "#3498db",
+    pos: cords = { x: 0, y: 0 },
+  ) {
     this.id = String(id);
     this.el = document.getElementById(this.id);
+    this.name = name;
+    this.content = content;
+    this.notes = notes;
+    this.color = color;
     this.pos = pos;
 
     this.el?.style.setProperty("left", String(this.pos.x) + "px");
@@ -35,16 +64,34 @@ class Tablet {
       });
     }
   }
-  update(newId: string, name: string, content: string, notes: string) {
+  update(
+    newId: string,
+    name: string,
+    content: string,
+    notes: string,
+    color: string,
+  ) {
     if (!this.el) return;
     this.el.id = String(newId);
     this.id = String(newId);
+    this.name = name;
+    this.content = content;
+    this.notes = notes;
+    this.color = color;
+    // Color is handed to the stylesheet; index.css decides how it is shown.
+    this.el.style.setProperty("--tablet-color", color);
     const header = this.el.querySelector(".header") as HTMLElement | null;
-    if (header) header.innerHTML = `<h1>${name}</h1>`;
+    if (header) {
+      header.innerHTML = `<h1>${name}</h1>`;
+    }
     const body = this.el.querySelector(".body") as HTMLElement | null;
-    if (body) body.innerText = content;
+    if (body) {
+      body.innerText = content;
+    }
     const footer = this.el.querySelector(".footer") as HTMLElement | null;
-    if (footer) footer.innerText = notes;
+    if (footer) {
+      footer.innerText = notes;
+    }
   }
 }
 
