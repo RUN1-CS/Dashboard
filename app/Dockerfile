@@ -1,15 +1,15 @@
 # --- Build stage for TypeScript --- #
 FROM node:24 AS builder
 
-WORKDIR /app/src/Frontend
+WORKDIR /app/src/
 
 # Copy package files and install dependencies
-COPY app/src/Frontend/package*.json ./
+COPY app/src/package*.json ./
 RUN npm install
 
 # Copy TypeScript source and compile
-COPY app/src/Frontend/src/ ./src/
-COPY app/src/Frontend/tsconfig.json ./
+COPY app/src/src/ ./src/
+COPY app/src/tsconfig.json ./
 RUN npm run build
 
 # --- Run Stage --- #
@@ -23,15 +23,15 @@ RUN a2enmod rewrite headers proxy proxy_http
 RUN docker-php-ext-install pdo pdo_pgsql
 
 # 2. Set Working Directory
-WORKDIR /var/www/html/Frontend
+WORKDIR /var/www/html/
 
 # 3. COPY THE PHP FILES FIRST (Crucial Step)
 # This copies index.php, login.php, etc. from your host to the container
-COPY app/src/Frontend/ ./
+COPY app/src/ ./
 
 # 4. Copy compiled JS from builder into the dist folder
-# This will overwrite/populate the dist folder inside /var/www/html/Frontend
-COPY --from=builder /app/src/Frontend/dist/ ./dist/
+# This will overwrite/populate the dist folder inside /var/www/html/
+COPY --from=builder /app/src/dist/ ./dist/
 
 # 5. Configuration & Permissions
 COPY ./apache/vhost.conf /etc/apache2/sites-available/000-default.conf

@@ -1,7 +1,6 @@
 <?php
-define('BACKEND_PATH', '/var/www/html/Backend');
-require_once BACKEND_PATH . '/dash-config.php';
-require BACKEND_PATH . '/validation.php';
+require_once 'dash-config.php';
+require 'validation.php';
 validate($pdo);
 
 global $pdo;

@@ -1,5 +1,5 @@
 <?php
-    require_once __DIR__ . '/dash-config.php';
+    require_once 'dash-config.php';
 
     // Prepare token for validation
     function prepare_token(): string{

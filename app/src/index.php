@@ -6,9 +6,8 @@ License: MIT
 
 I hope you find this project useful and fun to use! If you have any questions or suggestions, feel free to reach out to me.
 */ 
-define('BACKEND_PATH', '/var/www/html/Backend');
 
-require BACKEND_PATH . '/validation.php';
+require_once 'validation.php';
 global $pdo;
 validate($pdo);
 ?>
